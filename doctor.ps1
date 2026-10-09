@@ -13,7 +13,7 @@ if ($ls) { Ok 'LocalSend installato' } else { Warn 'LocalSend non installato: la
 
 # In esecuzione e in ascolto sulla porta 53317?
 if (Get-Process -Name localsend_app, LocalSend) { Ok 'LocalSend in esecuzione' } else { Warn 'LocalSend non e'' aperto: avvialo' }
-if (Get-NetTCPConnection -LocalPort 53317 -State Listen) { Ok 'Porta 53317 in ascolto' } else { Warn 'Nessuno ascolta sulla 53317 (app chiusa o porta cambiata nelle impostazioni)' }
+if (Get-NetTCPConnection -LocalPort 53317 -State Listen -ErrorAction SilentlyContinue) { Ok 'Porta 53317 in ascolto' } else { Warn 'Nessuno ascolta sulla 53317 (app chiusa o porta cambiata nelle impostazioni)' }
 
 # Firewall
 $fw = Get-NetFirewallRule -DisplayName 'LocalSend iPhone Bridge*' | Where-Object Enabled -eq True

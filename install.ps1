@@ -28,7 +28,7 @@ $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 if ($Status) { & (Join-Path $here 'doctor.ps1'); return }
 
 function Test-Admin {
-    ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole('Administrator')
+    ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
 if (-not (Test-Admin)) {
