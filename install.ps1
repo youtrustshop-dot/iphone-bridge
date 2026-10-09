@@ -18,7 +18,8 @@
 param(
     [string]$Folder = (Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'iPhone'),
     [switch]$Status,
-    [switch]$MakeNetworkPrivate
+    [switch]$MakeNetworkPrivate,
+    [switch]$Elevated
 )
 
 $ErrorActionPreference = 'Stop'
@@ -31,8 +32,10 @@ function Test-Admin {
 }
 
 if (-not (Test-Admin)) {
+    # Mai rilanciarsi piu' di una volta: se la copia elevata non risulta admin, ci si ferma.
+    if ($Elevated) { throw 'Rilancio elevato fallito: apri PowerShell "come amministratore" a mano e rilancia.' }
     Write-Host 'Servono i permessi di amministratore (firewall). Riapro la finestra elevata...'
-    $argList = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$($MyInvocation.MyCommand.Path)`"", '-Folder', "`"$Folder`"")
+    $argList = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$($MyInvocation.MyCommand.Path)`"", '-Folder', "`"$Folder`"", '-Elevated')
     if ($MakeNetworkPrivate) { $argList += '-MakeNetworkPrivate' }
     Start-Process powershell -Verb RunAs -ArgumentList $argList -Wait
     return
